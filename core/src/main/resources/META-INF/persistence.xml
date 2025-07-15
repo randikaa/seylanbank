@@ -1,0 +1,30 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+
+    <persistence-unit name="SeylanBankPU" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>jdbc/SeylanBankDS</jta-data-source>
+
+        <!-- Entity Classes -->
+        <class>com.randika.seylanbank.core.model.User</class>
+        <class>com.randika.seylanbank.core.model.Customer</class>
+        <class>com.randika.seylanbank.core.model.Account</class>
+        <class>com.randika.seylanbank.core.model.Transaction</class>
+        <class>com.randika.seylanbank.core.model.ScheduledTask</class>
+        <class>com.randika.seylanbank.core.model.InterestRate</class>
+
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+        <properties>
+            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+            <!-- Cache Settings -->
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+
+            <property name="hibernate.transaction.jta.platform"
+                      value="org.hibernate.engine.transaction.jta.platform.internal.SunOneJtaPlatform"/>
+        </properties>
+    </persistence-unit>
+</persistence>

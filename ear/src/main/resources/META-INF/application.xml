@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="https://jakarta.ee/xml/ns/jakartaee"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+             https://jakarta.ee/xml/ns/jakartaee/application_10.xsd"
+             version="10">
+
+    <application-name>SeylanBank</application-name>
+    <description>SeylanBank Core Banking System</description>
+
+    <module>
+        <web>
+            <web-uri>web-1.0.war</web-uri>
+            <context-root>/seylanbank</context-root>
+        </web>
+    </module>
+
+    <module>
+        <ejb>auth-1.0.jar</ejb>
+    </module>
+
+    <module>
+        <ejb>banking-1.0.jar</ejb>
+    </module>
+
+    <module>
+        <ejb>reports-1.0.jar</ejb>
+    </module>
+
+    <module>
+        <java>core-1.0.jar</java>
+    </module>
+
+    <library-directory>lib</library-directory>
+
+    <env-entry>
+        <env-entry-name>app/name</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>SeylanBank Core Banking System</env-entry-value>
+    </env-entry>
+
+    <env-entry>
+        <env-entry-name>app/version</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>1.0</env-entry-value>
+    </env-entry>
+
+    <env-entry>
+        <env-entry-name>app/environment</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>production</env-entry-value>
+    </env-entry>
+</application>

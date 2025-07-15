@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.randika.seylanbank</groupId>
+    <artifactId>SeylanBank</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <name>SeylanBank Core Banking System</name>
+    <description>Enterprise Core Banking System for SeylanBank</description>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Jakarta EE 10 -->
+        <jakarta.version>10.0.0</jakarta.version>
+        <jakarta.ejb.version>4.0.1</jakarta.ejb.version>
+        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
+        <jakarta.security.version>3.0.0</jakarta.security.version>
+
+        <!-- Hibernate -->
+        <hibernate.version>6.2.7.Final</hibernate.version>
+
+        <!-- MySQL -->
+        <mysql.version>8.0.33</mysql.version>
+
+        <!-- Maven Plugins -->
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
+        <maven.ear.plugin.version>3.3.0</maven.ear.plugin.version>
+        <maven.ejb.plugin.version>3.2.1</maven.ejb.plugin.version>
+    </properties>
+
+    <modules>
+        <module>core</module>
+        <module>auth</module>
+        <module>banking</module>
+        <module>web</module>
+        <module>reports</module>
+        <module>ear</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Jakarta EE Platform -->
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-api</artifactId>
+                <version>${jakarta.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Jakarta EJB -->
+            <dependency>
+                <groupId>jakarta.ejb</groupId>
+                <artifactId>jakarta.ejb-api</artifactId>
+                <version>${jakarta.ejb.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Jakarta Persistence -->
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>${jakarta.persistence.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Jakarta Annotations -->
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>${jakarta.annotation.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Jakarta Security -->
+            <dependency>
+                <groupId>jakarta.security.enterprise</groupId>
+                <artifactId>jakarta.security.enterprise-api</artifactId>
+                <version>${jakarta.security.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Hibernate -->
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate.version}</version>
+            </dependency>
+
+            <!-- MySQL Connector -->
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!-- Project Modules -->
+            <dependency>
+                <groupId>com.randika.seylanbank</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.randika.seylanbank</groupId>
+                <artifactId>auth</artifactId>
+                <version>${project.version}</version>
+                <type>ejb</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.randika.seylanbank</groupId>
+                <artifactId>banking</artifactId>
+                <version>${project.version}</version>
+                <type>ejb</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.randika.seylanbank</groupId>
+                <artifactId>web</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.randika.seylanbank</groupId>
+                <artifactId>reports</artifactId>
+                <version>${project.version}</version>
+                <type>ejb</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Compiler Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- EJB Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-ejb-plugin</artifactId>
+                    <version>${maven.ejb.plugin.version}</version>
+                    <configuration>
+                        <ejbVersion>4.0</ejbVersion>
+                    </configuration>
+                </plugin>
+
+                <!-- WAR Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven.war.plugin.version}</version>
+                    <configuration>
+                        <webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+                    </configuration>
+                </plugin>
+
+                <!-- EAR Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-ear-plugin</artifactId>
+                    <version>${maven.ear.plugin.version}</version>
+                    <configuration>
+                        <version>10</version>
+                        <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

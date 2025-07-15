@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.randika.seylanbank</groupId>
+        <artifactId>SeylanBank</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>ear</artifactId>
+    <packaging>ear</packaging>
+
+    <name>SeylanBank EAR</name>
+    <description>Enterprise Application Archive</description>
+
+    <dependencies>
+        <!-- Core Module -->
+        <dependency>
+            <groupId>com.randika.seylanbank</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+
+        <!-- EJB Modules -->
+        <dependency>
+            <groupId>com.randika.seylanbank</groupId>
+            <artifactId>auth</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.randika.seylanbank</groupId>
+            <artifactId>banking</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.randika.seylanbank</groupId>
+            <artifactId>reports</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <!-- Web Module -->
+        <dependency>
+            <groupId>com.randika.seylanbank</groupId>
+            <artifactId>web</artifactId>
+            <type>war</type>
+        </dependency>
+
+        <!-- External Libraries -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext7-core</artifactId>
+            <version>7.2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <configuration>
+                    <modules>
+                        <webModule>
+                            <groupId>com.randika.seylanbank</groupId>
+                            <artifactId>web</artifactId>
+                            <contextRoot>/seylanbank</contextRoot>
+                        </webModule>
+                        <ejbModule>
+                            <groupId>com.randika.seylanbank</groupId>
+                            <artifactId>auth</artifactId>
+                        </ejbModule>
+                        <ejbModule>
+                            <groupId>com.randika.seylanbank</groupId>
+                            <artifactId>banking</artifactId>
+                        </ejbModule>
+                        <ejbModule>
+                            <groupId>com.randika.seylanbank</groupId>
+                            <artifactId>reports</artifactId>
+                        </ejbModule>
+                        <jarModule>
+                            <groupId>com.randika.seylanbank</groupId>
+                            <artifactId>core</artifactId>
+                        </jarModule>
+                    </modules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

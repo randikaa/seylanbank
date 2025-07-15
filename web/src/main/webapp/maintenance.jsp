@@ -6,11 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<jsp:include page="common/header.jsp"/>
+<h2>System Maintenance</h2>
+<p>The system is currently down for scheduled maintenance. We apologize for any inconvenience.</p>
+<jsp:include page="common/footer.jsp"/>

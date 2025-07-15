@@ -24,6 +24,9 @@ public class Customer {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "national_id", unique = true)
     private String nationalId;
 
@@ -57,6 +60,29 @@ public class Customer {
 
     private String generateCustomerNumber() {
         return "CUST" + System.currentTimeMillis();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Customer(Long id, String customerNumber, String firstName, String lastName, LocalDate dateOfBirth, String email, String nationalId, String phoneNumber, String address, LocalDateTime createdDate, User user, List<Account> accounts) {
+        this.id = id;
+        this.customerNumber = customerNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.nationalId = nationalId;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.createdDate = createdDate;
+        this.user = user;
+        this.accounts = accounts;
     }
 
     public String getFullName() {

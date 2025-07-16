@@ -131,4 +131,23 @@ public class AccountManagementBean implements AccountService {
     public List<Account> findMyAccounts(Long customerId) {
         return findAccountsByCustomer(customerId);
     }
+
+    @Override
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    public List<Account> findByAccountNumber(String accountNumber) {
+        TypedQuery<Account> query = em.createQuery(
+                "SELECT a FROM Account a WHERE a.accountNumber LIKE :accNo", Account.class);
+        query.setParameter("accNo", "%" + accountNumber + "%");
+        return query.getResultList();
+    }
+
+    @Override
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    public List<Account> findByCustomerName(String customerName) {
+        TypedQuery<Account> query = em.createQuery(
+                "SELECT a FROM Account a WHERE LOWER(a.customer.fullName) LIKE :name", Account.class);
+        query.setParameter("name", "%" + customerName.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
 }

@@ -1,8 +1,18 @@
 package com.randika.seylanbank.core.enums;
 
 public enum TransactionStatus {
-    PENDING,
-    COMPLETED,
-    FAILED,
-    CANCELLED,
+    PENDING("Pending"),
+    COMPLETED("Completed"),
+    FAILED("Failed"),
+    CANCELLED("Cancelled");
+
+    private final String displayName;
+
+    TransactionStatus(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

@@ -1,6 +1,6 @@
 package com.randika.seylanbank.reports.scheduler;
 
-import com.randika.seylanbank.core.service.ReportService;
+import com.randika.seylanbank.core.service.ReportGenerationService;
 import com.randika.seylanbank.core.service.AccountService;
 
 import jakarta.ejb.EJB;
@@ -20,7 +20,7 @@ public class DailyReportScheduler {
     private static final Logger LOGGER = Logger.getLogger(DailyReportScheduler.class.getName());
 
     @EJB
-    private ReportService reportService;
+    private ReportGenerationService reportService;
 
     @EJB
     private AccountService accountService;

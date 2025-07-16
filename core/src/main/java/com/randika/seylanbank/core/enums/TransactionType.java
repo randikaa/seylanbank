@@ -5,7 +5,7 @@ public enum TransactionType {
     WITHDRAWAL("Withdrawal"),
     TRANSFER("Transfer"),
     INTEREST_CREDIT("Interest Credit"),
-    FEE_DEBIT("Fee Debit"),;
+    FEE_DEBIT("Fee Debit");
 
     private final String displayName;
 
@@ -15,5 +15,13 @@ public enum TransactionType {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public boolean isCredit() {
+        return this == DEPOSIT || this == INTEREST_CREDIT;
+    }
+
+    public boolean isDebit() {
+        return this == WITHDRAWAL || this == TRANSFER || this == FEE_DEBIT;
     }
 }

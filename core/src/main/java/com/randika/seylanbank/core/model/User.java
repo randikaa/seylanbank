@@ -2,6 +2,7 @@ package com.randika.seylanbank.core.model;
 
 import jakarta.persistence.*;
 import com.randika.seylanbank.core.enums.UserRole;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,6 +17,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String salt; // ✅ NEW FIELD
 
     @Column(nullable = false)
     private String email;
@@ -56,6 +60,9 @@ public class User {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public String getSalt() { return salt; }
+    public void setSalt(String salt) { this.salt = salt; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

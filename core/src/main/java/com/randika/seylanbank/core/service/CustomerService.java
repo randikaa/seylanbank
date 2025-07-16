@@ -13,6 +13,11 @@ public interface CustomerService {
     List<Customer> findAllCustomers();
     void deleteCustomer(Long customerId);
 
+    List<Customer> searchByName(String name);
+    List<Customer> searchByNationalId(String nationalId);
+    List<Customer> searchByEmail(String email);
+    List<Customer> searchByPhoneNumber(String phoneNumber);
+
     // Additional methods
     Customer findCustomerByNationalId(String nationalId);
     Customer findCustomerByCustomerNumber(String customerNumber);

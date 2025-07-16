@@ -1,9 +1,6 @@
 package com.randika.seylanbank.web.controller;
 
-import com.randika.seylanbank.core.service.ReportService;
-import com.randika.seylanbank.core.service.AccountService;
-import com.randika.seylanbank.core.service.TransactionService;
-import com.randika.seylanbank.core.service.CustomerService;
+import com.randika.seylanbank.core.service.*;
 import com.randika.seylanbank.core.model.Account;
 import com.randika.seylanbank.core.model.Transaction;
 import com.randika.seylanbank.core.model.Customer;
@@ -20,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 
 @WebServlet("/controller/reports/*")
 public class ReportController extends HttpServlet {
@@ -29,7 +28,16 @@ public class ReportController extends HttpServlet {
     private static final SimpleDateFormat MONTH_FORMAT = new SimpleDateFormat("yyyy-MM");
 
     @EJB
-    private ReportService reportService;
+    private CustomerReportService customerReportService;
+
+    @EJB
+    private ReportGenerationService reportGenerationService;
+
+    @EJB
+    private MonthlyReportService monthlyReportService;
+
+    @EJB
+    private TransactionReportService transactionReportService;
 
     @EJB
     private AccountService accountService;
@@ -122,7 +130,7 @@ public class ReportController extends HttpServlet {
         String dateStr = request.getParameter("date");
         Date reportDate = dateStr != null ? DATE_FORMAT.parse(dateStr) : new Date();
 
-        byte[] reportData = reportService.generateDailyBalanceReport(reportDate);
+        byte[] reportData = reportGenerationService.generateDailyBalanceReport(reportDate);
 
         sendReportResponse(response, reportData, "daily-balance-" + DATE_FORMAT.format(reportDate) + ".pdf", "application/pdf");
     }
@@ -148,7 +156,7 @@ public class ReportController extends HttpServlet {
             }
         }
 
-        byte[] reportData = reportService.generateMonthlyStatement(accountId, monthYear);
+        byte[] reportData = monthlyReportService.generateMonthlyStatement(accountId, monthYear);
 
         sendReportResponse(response, reportData, "statement-" + accountId + "-" + monthYearStr + ".pdf", "application/pdf");
     }
@@ -163,7 +171,7 @@ public class ReportController extends HttpServlet {
         Date fromDate = DATE_FORMAT.parse(fromDateStr);
         Date toDate = DATE_FORMAT.parse(toDateStr);
 
-        byte[] reportData = reportService.generateTransactionReport(fromDate, toDate);
+        byte[] reportData = transactionReportService.generateTransactionReport(fromDate, toDate);
 
         String filename = "transactions-" + fromDateStr + "-to-" + toDateStr;
         String contentType = "pdf".equals(format) ? "application/pdf" : "application/vnd.ms-excel";
@@ -175,7 +183,7 @@ public class ReportController extends HttpServlet {
     private void generateCustomerReport(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        byte[] reportData = reportService.generateCustomerReport();
+        byte[] reportData = customerReportService.generateCustomerReport();
 
         sendReportResponse(response, reportData, "customer-report-" + DATE_FORMAT.format(new Date()) + ".pdf", "application/pdf");
     }
@@ -192,19 +200,20 @@ public class ReportController extends HttpServlet {
         if (accountType != null && !accountType.isEmpty()) {
             accounts = accounts.stream()
                     .filter(a -> a.getAccountType().name().equals(accountType))
-                    .toList();
+                    .collect(java.util.stream.Collectors.toList());
         }
 
         if (status != null && !status.isEmpty()) {
             accounts = accounts.stream()
                     .filter(a -> a.getStatus().name().equals(status))
-                    .toList();
+                    .collect(java.util.stream.Collectors.toList());
         }
 
         request.setAttribute("accounts", accounts);
         request.setAttribute("reportDate", new Date());
         request.getRequestDispatcher("/admin/report-account-summary.jsp").forward(request, response);
     }
+
 
     private void generateInterestReport(HttpServletRequest request, HttpServletResponse response)
             throws Exception {

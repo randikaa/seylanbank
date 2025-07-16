@@ -25,4 +25,8 @@ public interface AccountService {
     List<Account> findInactiveAccounts();
     List<Account> findAccountsWithLowBalance(BigDecimal threshold);
     List<Account> findMyAccounts(Long customerId);
+
+    List<Account> findByAccountNumber(String accountNumber);
+    List<Account> findByCustomerName(String customerName);
+
 }

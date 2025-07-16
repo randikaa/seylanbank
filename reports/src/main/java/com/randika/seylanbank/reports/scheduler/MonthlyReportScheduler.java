@@ -1,8 +1,6 @@
 package com.randika.seylanbank.reports.scheduler;
 
-import com.randika.seylanbank.core.service.ReportService;
-import com.randika.seylanbank.core.service.AccountService;
-import com.randika.seylanbank.core.service.CustomerService;
+import com.randika.seylanbank.core.service.*;
 import com.randika.seylanbank.core.model.Account;
 import com.randika.seylanbank.core.model.Customer;
 
@@ -25,7 +23,10 @@ public class MonthlyReportScheduler {
     private static final Logger LOGGER = Logger.getLogger(MonthlyReportScheduler.class.getName());
 
     @EJB
-    private ReportService reportService;
+    private MonthlyReportService reportService;
+
+    @EJB
+    private ReportGenerationService reportGenerationService;
 
     @EJB
     private AccountService accountService;
@@ -85,7 +86,7 @@ public class MonthlyReportScheduler {
             Date monthStart = cal.getTime();
             Date now = new Date();
 
-            byte[] analyticsReport = reportService.generateTransactionReport(monthStart, now);
+            byte[] analyticsReport = reportGenerationService.generateTransactionReport(monthStart, now);
 
             if (analyticsReport != null && analyticsReport.length > 0) {
                 String fileName = "monthly_analytics_" + cal.get(Calendar.YEAR) + "_" +

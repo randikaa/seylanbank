@@ -18,13 +18,14 @@
     <description>Enterprise Application Archive</description>
 
     <dependencies>
-        <!-- Core Module -->
+        <!-- Core module: only interfaces and shared classes -->
         <dependency>
             <groupId>com.randika.seylanbank</groupId>
             <artifactId>core</artifactId>
+            <type>jar</type>
         </dependency>
 
-        <!-- EJB Modules -->
+        <!-- EJB modules: only implementations -->
         <dependency>
             <groupId>com.randika.seylanbank</groupId>
             <artifactId>auth</artifactId>
@@ -43,14 +44,14 @@
             <type>ejb</type>
         </dependency>
 
-        <!-- Web Module -->
+        <!-- Web module -->
         <dependency>
             <groupId>com.randika.seylanbank</groupId>
             <artifactId>web</artifactId>
             <type>war</type>
         </dependency>
 
-        <!-- External Libraries -->
+        <!-- External libraries -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -65,8 +66,8 @@
 
         <dependency>
             <groupId>com.itextpdf</groupId>
-            <artifactId>itext7-core</artifactId>
-            <version>7.2.5</version>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.13.3</version>
         </dependency>
 
         <dependency>
@@ -80,7 +81,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ear-plugin</artifactId>
+                <version>3.2.0</version> <!-- specify version -->
                 <configuration>
+                    <version>7</version>
+                    <!-- Put core.jar inside EAR's lib directory, so all modules can use it but no duplication -->
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+
                     <modules>
                         <webModule>
                             <groupId>com.randika.seylanbank</groupId>
@@ -99,10 +105,6 @@
                             <groupId>com.randika.seylanbank</groupId>
                             <artifactId>reports</artifactId>
                         </ejbModule>
-                        <jarModule>
-                            <groupId>com.randika.seylanbank</groupId>
-                            <artifactId>core</artifactId>
-                        </jarModule>
                     </modules>
                 </configuration>
             </plugin>

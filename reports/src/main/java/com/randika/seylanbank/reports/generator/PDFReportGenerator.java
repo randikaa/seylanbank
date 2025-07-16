@@ -32,8 +32,10 @@ public class PDFReportGenerator {
             content.append("------------------------------------------------\n");
 
             for (Transaction transaction : transactions) {
-                content.append(DateUtil.formatDateForDisplay(transaction.getTransactionDate().toInstant()
-                                .atZone(java.time.ZoneId.systemDefault()).toLocalDate()))
+                content.append(DateUtil.formatDateForDisplay(
+                                transaction.getTransactionDate()
+                                        .atZone(java.time.ZoneId.systemDefault())
+                                        .toLocalDate()))
                         .append("\t").append(transaction.getType().getDisplayName())
                         .append("\t$").append(transaction.getAmount())
                         .append("\t$").append(transaction.getBalanceAfter())
@@ -66,7 +68,7 @@ public class PDFReportGenerator {
                 content.append(customer.getFirstName()).append(" ").append(customer.getLastName())
                         .append("\t").append(customer.getEmail())
                         .append("\t").append(customer.getPhoneNumber())
-                        .append("\t").append(DateUtil.formatDateForDisplay(customer.getCreatedDate()))
+                        .append("\t").append(DateUtil.formatDateForDisplay(customer.getCreatedDate().toLocalDate()))
                         .append("\n");
             }
 

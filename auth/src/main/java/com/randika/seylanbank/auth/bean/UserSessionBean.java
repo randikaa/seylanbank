@@ -34,7 +34,7 @@ public class UserSessionBean implements UserService {
 
             User user = query.getSingleResult();
 
-            if (SecurityUtil.verifyPassword(password, user.getPassword())) {
+            if (SecurityUtil.verifyPassword(password, user.getPassword(), user.getSalt())) {
                 user.setLastLogin(LocalDateTime.now());
                 em.merge(user);
                 return user;
@@ -46,16 +46,20 @@ public class UserSessionBean implements UserService {
         }
     }
 
+
     @Override
     @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
     public void createUser(User user) {
-        // Hash password before storing
-        String hashedPassword = SecurityUtil.hashPassword(user.getPassword());
+        String salt = SecurityUtil.generateSalt();
+        String hashedPassword = SecurityUtil.hashPassword(user.getPassword(), salt);
+
+        user.setSalt(salt);
         user.setPassword(hashedPassword);
         user.setCreatedDate(LocalDateTime.now());
 
         em.persist(user);
     }
+
 
     @Override
     @RolesAllowed({"ADMIN", "SUPER_ADMIN"})
@@ -68,11 +72,16 @@ public class UserSessionBean implements UserService {
     public void changePassword(Long userId, String newPassword) {
         User user = em.find(User.class, userId);
         if (user != null) {
-            String hashedPassword = SecurityUtil.hashPassword(newPassword);
+            String newSalt = SecurityUtil.generateSalt();
+            String hashedPassword = SecurityUtil.hashPassword(newPassword, newSalt);
+
+            user.setSalt(newSalt);
             user.setPassword(hashedPassword);
+
             em.merge(user);
         }
     }
+
 
     @Override
     @RolesAllowed({"ADMIN", "SUPER_ADMIN"})

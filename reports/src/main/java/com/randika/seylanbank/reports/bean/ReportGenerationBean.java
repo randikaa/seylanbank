@@ -1,12 +1,12 @@
 package com.randika.seylanbank.reports.bean;
 
+import com.randika.seylanbank.core.service.ReportGenerationService;
 import jakarta.ejb.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.annotation.security.RolesAllowed;
 
-import com.randika.seylanbank.core.service.ReportService;
 import com.randika.seylanbank.core.model.*;
 import com.randika.seylanbank.core.enums.*;
 
@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class ReportGenerationBean implements ReportService {
+public class ReportGenerationBean implements ReportGenerationService {
 
     @PersistenceContext(unitName = "SeylanBankPU")
     private EntityManager em;
@@ -85,8 +85,8 @@ public class ReportGenerationBean implements ReportService {
         return generateCustomerSummaryReport(customers);
     }
 
-    @Override
     @RolesAllowed({"SUPER_ADMIN", "ADMIN", "CUSTOMER"})
+    @Override
     public byte[] generateAccountSummaryReport(Long customerId) {
         TypedQuery<Account> query = em.createQuery(
                 "SELECT a FROM Account a WHERE a.customer.id = :customerId", Account.class);
@@ -97,8 +97,8 @@ public class ReportGenerationBean implements ReportService {
         return generateCustomerAccountSummary(accounts);
     }
 
-    @Override
     @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    @Override
     public byte[] generateInterestReport(Date fromDate, Date toDate) {
         TypedQuery<Transaction> query = em.createQuery(
                 "SELECT t FROM Transaction t WHERE t.type = :interestType " +
@@ -113,8 +113,8 @@ public class ReportGenerationBean implements ReportService {
         return generateInterestSummaryReport(interestTransactions, fromDate, toDate);
     }
 
-    @Override
     @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    @Override
     public byte[] generateLargeTransactionReport(BigDecimal minimumAmount, Date fromDate, Date toDate) {
         TypedQuery<Transaction> query = em.createQuery(
                 "SELECT t FROM Transaction t WHERE t.amount >= :minimumAmount " +
@@ -129,8 +129,8 @@ public class ReportGenerationBean implements ReportService {
         return generateLargeTransactionSummary(largeTransactions, minimumAmount);
     }
 
-    @Override
     @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    @Override
     public byte[] generateInactiveAccountsReport() {
         TypedQuery<Account> query = em.createQuery(
                 "SELECT a FROM Account a WHERE a.status = :status " +
@@ -143,8 +143,8 @@ public class ReportGenerationBean implements ReportService {
         return generateInactiveAccountsSummary(inactiveAccounts);
     }
 
-    @Override
     @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    @Override
     public byte[] generateUserActivityReport(Date fromDate, Date toDate) {
         TypedQuery<User> query = em.createQuery(
                 "SELECT u FROM User u WHERE u.lastLogin BETWEEN :fromDate AND :toDate " +

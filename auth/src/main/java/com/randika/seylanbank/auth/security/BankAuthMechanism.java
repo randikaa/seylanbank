@@ -7,8 +7,9 @@ import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticat
 import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.randika.seylanbank.core.exception.UnauthorizedAccessException;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @AutoApplySession
@@ -38,7 +39,26 @@ public class BankAuthMechanism implements HttpAuthenticationMechanism {
 
             if (username != null && password != null) {
                 LOGGER.info("Attempting form-based authentication for user: " + username);
-                return httpMessageContext.notifyContainerAboutLogin(username, password);
+
+                // ===== Manual authentication logic =====
+                // Replace this with your actual authentication logic (e.g., DB check)
+                boolean validUser = "admin".equals(username) && "adminpass".equals(password);
+                if (validUser) {
+                    Set<String> roles = new HashSet<>();
+                    roles.add("USER");  // Assign roles accordingly
+
+                    return httpMessageContext.notifyContainerAboutLogin(username, roles);
+                } else {
+                    try {
+                        String loginURL = request.getContextPath() + "/login.jsp?error=1";
+                        LOGGER.info("Authentication failed, redirecting to: " + loginURL);
+                        response.sendRedirect(loginURL);
+                        return AuthenticationStatus.SEND_FAILURE;
+                    } catch (Exception e) {
+                        LOGGER.severe("Error redirecting to login page after failed login: " + e.getMessage());
+                        return AuthenticationStatus.SEND_FAILURE;
+                    }
+                }
             }
 
             // Redirect to login page if not authenticated

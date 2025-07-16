@@ -20,7 +20,7 @@ public class NotificationBean implements NotificationService {
     @PersistenceContext(unitName = "SeylanBankPU")
     private EntityManager em;
 
-    @Resource(mappedName = "java:jboss/mail/Default")
+    @Resource(mappedName = "mail/Default")
     private jakarta.mail.Session mailSession;
 
     @RolesAllowed({"SUPER_ADMIN", "ADMIN"})

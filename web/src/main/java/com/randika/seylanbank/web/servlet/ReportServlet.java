@@ -1,6 +1,6 @@
 package com.randika.seylanbank.web.servlet;
 
-import com.randika.seylanbank.core.service.ReportService;
+import com.randika.seylanbank.core.service.*;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +19,16 @@ public class ReportServlet extends HttpServlet {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     @EJB
-    private ReportService reportService;
+    private ReportGenerationService reportGenerationService;
+
+    @EJB
+    private MonthlyReportService monthlyReportService;
+
+    @EJB
+    private TransactionReportService transactionReportService;
+
+    @EJB
+    private CustomerReportService customerReportService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,7 +61,7 @@ public class ReportServlet extends HttpServlet {
         String dateStr = request.getParameter("date");
         Date reportDate = dateStr != null ? DATE_FORMAT.parse(dateStr) : new Date();
 
-        byte[] reportData = reportService.generateDailyBalanceReport(reportDate);
+        byte[] reportData = reportGenerationService.generateDailyBalanceReport(reportDate);
 
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=daily-balance-" + dateStr + ".pdf");
@@ -66,7 +75,7 @@ public class ReportServlet extends HttpServlet {
         String monthYearStr = request.getParameter("monthYear");
         Date monthYear = DATE_FORMAT.parse(monthYearStr + "-01");
 
-        byte[] reportData = reportService.generateMonthlyStatement(accountId, monthYear);
+        byte[] reportData = monthlyReportService.generateMonthlyStatement(accountId, monthYear);
 
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=statement-" + accountId + "-" + monthYearStr + ".pdf");
@@ -82,7 +91,7 @@ public class ReportServlet extends HttpServlet {
         Date fromDate = DATE_FORMAT.parse(fromDateStr);
         Date toDate = DATE_FORMAT.parse(toDateStr);
 
-        byte[] reportData = reportService.generateTransactionReport(fromDate, toDate);
+        byte[] reportData = transactionReportService.generateTransactionReport(fromDate, toDate);
 
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=transactions-" + fromDateStr + "-to-" + toDateStr + ".xlsx");
@@ -92,7 +101,7 @@ public class ReportServlet extends HttpServlet {
     private void handleCustomerReport(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        byte[] reportData = reportService.generateCustomerReport();
+        byte[] reportData = customerReportService.generateCustomerReport();
 
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=customer-report-" + DATE_FORMAT.format(new Date()) + ".pdf");

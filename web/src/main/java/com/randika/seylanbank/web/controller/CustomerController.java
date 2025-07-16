@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Logger;
@@ -145,7 +146,7 @@ public class CustomerController extends HttpServlet {
         customer.setNationalId(nationalId);
         customer.setAddress(address);
         customer.setDateOfBirth(dateOfBirth);
-        customer.setCreatedDate(LocalDate.now());
+        customer.setCreatedDate(LocalDateTime.now());
 
         // Validate customer
         CustomerValidator.validateCustomer(customer);

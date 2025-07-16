@@ -1,6 +1,6 @@
 package com.randika.seylanbank.reports.bean;
 
-import com.randika.seylanbank.core.service.ReportService;
+import com.randika.seylanbank.core.service.MonthlyReportService;
 import com.randika.seylanbank.core.service.AccountService;
 import com.randika.seylanbank.core.service.TransactionService;
 import com.randika.seylanbank.core.model.Account;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class MonthlyReportBean implements ReportService {
+public class MonthlyReportBean implements MonthlyReportService {
 
     private static final Logger LOGGER = Logger.getLogger(MonthlyReportBean.class.getName());
 
@@ -56,26 +56,5 @@ public class MonthlyReportBean implements ReportService {
             LOGGER.severe("Error generating monthly statement: " + e.getMessage());
             return new byte[0];
         }
-    }
-
-    @Override
-    @RolesAllowed({"ADMIN"})
-    public byte[] generateDailyBalanceReport(Date reportDate) {
-        // This method is not implemented in this bean
-        return new byte[0];
-    }
-
-    @Override
-    @RolesAllowed({"ADMIN"})
-    public byte[] generateTransactionReport(Date fromDate, Date toDate) {
-        // This method is not implemented in this bean
-        return new byte[0];
-    }
-
-    @Override
-    @RolesAllowed({"ADMIN"})
-    public byte[] generateCustomerReport() {
-        // This method is not implemented in this bean
-        return new byte[0];
     }
 }

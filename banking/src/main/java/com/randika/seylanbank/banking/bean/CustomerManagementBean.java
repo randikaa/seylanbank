@@ -124,4 +124,41 @@ public class CustomerManagementBean implements CustomerService {
             em.merge(customer);
         }
     }
+
+    @Override
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    public List<Customer> searchByName(String name) {
+        TypedQuery<Customer> query = em.createQuery(
+                "SELECT c FROM Customer c WHERE LOWER(CONCAT(c.firstName, ' ', c.lastName)) LIKE :name", Customer.class);
+        query.setParameter("name", "%" + name.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
+    @Override
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    public List<Customer> searchByNationalId(String nationalId) {
+        TypedQuery<Customer> query = em.createQuery(
+                "SELECT c FROM Customer c WHERE c.nationalId LIKE :nid", Customer.class);
+        query.setParameter("nid", "%" + nationalId + "%");
+        return query.getResultList();
+    }
+
+    @Override
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    public List<Customer> searchByEmail(String email) {
+        TypedQuery<Customer> query = em.createQuery(
+                "SELECT c FROM Customer c WHERE LOWER(c.email) LIKE :email", Customer.class);
+        query.setParameter("email", "%" + email.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
+    @Override
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
+    public List<Customer> searchByPhoneNumber(String phoneNumber) {
+        TypedQuery<Customer> query = em.createQuery(
+                "SELECT c FROM Customer c WHERE c.phoneNumber LIKE :phone", Customer.class);
+        query.setParameter("phone", "%" + phoneNumber + "%");
+        return query.getResultList();
+    }
+
 }

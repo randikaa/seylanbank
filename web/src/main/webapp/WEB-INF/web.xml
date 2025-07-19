@@ -55,7 +55,7 @@
             <role-name>SUPER_ADMIN</role-name>
         </auth-constraint>
         <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+            <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
 
@@ -71,7 +71,7 @@
             <role-name>CUSTOMER</role-name>
         </auth-constraint>
         <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+            <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
 
@@ -88,7 +88,7 @@
             <role-name>SUPER_ADMIN</role-name>
         </auth-constraint>
         <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+            <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
 

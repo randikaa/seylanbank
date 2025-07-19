@@ -87,7 +87,6 @@ public class TransactionProcessingBean implements TransactionService {
             );
         }
 
-        // Create transfer transactions
         Transaction debitTransaction = new Transaction(fromAccount, TransactionType.TRANSFER,
                 amount, "Transfer to " + toAccount.getAccountNumber());
         debitTransaction.setToAccount(toAccount);
@@ -96,11 +95,9 @@ public class TransactionProcessingBean implements TransactionService {
                 amount, "Transfer from " + fromAccount.getAccountNumber());
         creditTransaction.setToAccount(fromAccount);
 
-        // Update balances
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         toAccount.setBalance(toAccount.getBalance().add(amount));
 
-        // Set transaction details
         LocalDateTime now = LocalDateTime.now();
         debitTransaction.setBalanceAfter(fromAccount.getBalance());
         creditTransaction.setBalanceAfter(toAccount.getBalance());

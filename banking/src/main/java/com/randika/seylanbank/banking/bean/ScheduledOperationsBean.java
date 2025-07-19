@@ -34,9 +34,6 @@ public class ScheduledOperationsBean implements ScheduledOperationService {
     @Resource
     private TimerService timerService;
 
-    // Automatic scheduled methods using @Schedule
-
-    // Daily balance update at 11:59 PM
     @Schedule(hour = "23", minute = "59", second = "0", persistent = false)
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void dailyBalanceUpdate() {
@@ -86,11 +83,10 @@ public class ScheduledOperationsBean implements ScheduledOperationService {
         }
     }
 
-    // Programmatic timer creation for user-specific scheduled transfers
     @Override
     @RolesAllowed({"SUPER_ADMIN", "ADMIN", "CUSTOMER"})
     public void scheduleTransfer(Long fromAccountId, Long toAccountId, BigDecimal amount, Date scheduledDate) {
-        // Create scheduled task record
+
         ScheduledTask task = new ScheduledTask(
                 "FUND_TRANSFER",
                 fromAccountId,
@@ -102,7 +98,6 @@ public class ScheduledOperationsBean implements ScheduledOperationService {
         task.setCreatedDate(LocalDateTime.now());
         em.persist(task);
 
-        // Create programmatic timer
         TimerConfig config = new TimerConfig();
         config.setInfo("SCHEDULED_TRANSFER_" + task.getId());
         config.setPersistent(false);
@@ -113,7 +108,6 @@ public class ScheduledOperationsBean implements ScheduledOperationService {
                 " from account " + fromAccountId + " to account " + toAccountId);
     }
 
-    // Timer callback method for programmatic timers
     @Timeout
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void handleTimeout(Timer timer) {

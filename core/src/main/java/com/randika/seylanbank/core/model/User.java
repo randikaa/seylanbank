@@ -19,7 +19,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String salt; // ✅ NEW FIELD
+    private String salt;
 
     @Column(nullable = false)
     private String email;

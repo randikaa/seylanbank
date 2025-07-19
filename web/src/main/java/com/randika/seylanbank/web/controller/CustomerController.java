@@ -134,10 +134,8 @@ public class CustomerController extends HttpServlet {
             throw new IllegalArgumentException("Invalid national ID format");
         }
 
-        // Parse date of birth
         LocalDate dateOfBirth = LocalDate.parse(dateOfBirthStr, DATE_FORMATTER);
 
-        // Create customer
         Customer customer = new Customer();
         customer.setFirstName(firstName);
         customer.setLastName(lastName);
@@ -148,12 +146,10 @@ public class CustomerController extends HttpServlet {
         customer.setDateOfBirth(dateOfBirth);
         customer.setCreatedDate(LocalDateTime.now());
 
-        // Validate customer
         CustomerValidator.validateCustomer(customer);
 
         Customer savedCustomer = customerService.createCustomer(customer);
 
-        // Create user account if requested
         String createUserAccount = request.getParameter("createUserAccount");
         if ("true".equals(createUserAccount)) {
             String username = request.getParameter("username");
@@ -194,7 +190,6 @@ public class CustomerController extends HttpServlet {
         Long customerId = Long.parseLong(request.getParameter("id"));
         Customer customer = customerService.findCustomerById(customerId);
 
-        // Update customer fields
         customer.setFirstName(request.getParameter("firstName"));
         customer.setLastName(request.getParameter("lastName"));
         customer.setEmail(request.getParameter("email"));
@@ -230,7 +225,6 @@ public class CustomerController extends HttpServlet {
 
         Long customerId = Long.parseLong(request.getParameter("id"));
 
-        // Check if customer has any active accounts
         List<Account> accounts = accountService.findAccountsByCustomer(customerId);
         if (!accounts.isEmpty()) {
             throw new IllegalStateException("Cannot delete customer with active accounts");
@@ -298,7 +292,6 @@ public class CustomerController extends HttpServlet {
 
         Customer customer = customerService.findCustomerById(customerId);
 
-        // Update allowed fields only
         customer.setEmail(request.getParameter("email"));
         customer.setPhoneNumber(request.getParameter("phoneNumber"));
         customer.setAddress(request.getParameter("address"));
@@ -336,13 +329,11 @@ public class CustomerController extends HttpServlet {
             throw new IllegalArgumentException("New password does not meet security requirements");
         }
 
-        // Verify current password
         User user = userService.authenticateUser((String)session.getAttribute("username"), currentPassword);
         if (user == null) {
             throw new IllegalArgumentException("Current password is incorrect");
         }
 
-        // Change password
         userService.changePassword(userId, SecurityUtil.hashPassword(newPassword));
 
         LOGGER.info("Customer changed password: " + session.getAttribute("username"));

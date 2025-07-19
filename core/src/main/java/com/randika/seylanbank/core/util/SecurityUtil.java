@@ -19,10 +19,11 @@ public class SecurityUtil {
         return hashPassword(password, generateSalt());
     }
 
-    public static String hashPassword(String password, String salt) {
+    public static String hashPassword(String password, String saltBase64) {
         try {
             MessageDigest md = MessageDigest.getInstance(SecurityConstants.HASH_ALGORITHM);
-            md.update(salt.getBytes());
+            byte[] saltBytes = Base64.getDecoder().decode(saltBase64);
+            md.update(saltBytes);
             byte[] hash = md.digest(password.getBytes());
             return Base64.getEncoder().encodeToString(hash);
         } catch (NoSuchAlgorithmException e) {

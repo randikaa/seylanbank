@@ -111,7 +111,6 @@ public class ReportController extends HttpServlet {
         String userRole = (String) session.getAttribute("userRole");
 
         if ("CUSTOMER".equals(userRole)) {
-            // Customer can only see their own reports
             Long customerId = (Long) session.getAttribute("customerId");
             List<Account> accounts = accountService.findAccountsByCustomer(customerId);
             request.setAttribute("accounts", accounts);
@@ -142,7 +141,6 @@ public class ReportController extends HttpServlet {
         String monthYearStr = request.getParameter("monthYear");
         Date monthYear = MONTH_FORMAT.parse(monthYearStr);
 
-        // Verify customer access
         HttpSession session = request.getSession();
         String userRole = (String) session.getAttribute("userRole");
 
@@ -196,7 +194,6 @@ public class ReportController extends HttpServlet {
 
         List<Account> accounts = accountService.findAllAccounts();
 
-        // Filter accounts based on criteria
         if (accountType != null && !accountType.isEmpty()) {
             accounts = accounts.stream()
                     .filter(a -> a.getAccountType().name().equals(accountType))
@@ -244,7 +241,6 @@ public class ReportController extends HttpServlet {
 
         LOGGER.info("Generating custom report: " + reportType);
 
-        // Based on report type, generate appropriate report
         switch (reportType) {
             case "large-transactions":
                 generateLargeTransactionReport(request, response);
@@ -303,7 +299,6 @@ public class ReportController extends HttpServlet {
         Customer customer = customerService.findCustomerById(customerId);
         List<Account> accounts = accountService.findAccountsByCustomer(customerId);
 
-        // Get all transactions for all customer accounts
         List<Transaction> allTransactions = new java.util.ArrayList<>();
         for (Account account : accounts) {
             List<Transaction> transactions = transactionService.getTransactionHistory(

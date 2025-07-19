@@ -41,7 +41,6 @@ public class RegisterServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // Get registration data
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             String confirmPassword = request.getParameter("confirmPassword");
@@ -53,7 +52,6 @@ public class RegisterServlet extends HttpServlet {
             String address = request.getParameter("address");
             String dateOfBirthStr = request.getParameter("dateOfBirth");
 
-            // Validate input
             if (!password.equals(confirmPassword)) {
                 throw new IllegalArgumentException("Passwords do not match");
             }
@@ -74,10 +72,8 @@ public class RegisterServlet extends HttpServlet {
                 throw new IllegalArgumentException("Invalid national ID format");
             }
 
-            // Parse date of birth
             LocalDate dateOfBirth = LocalDate.parse(dateOfBirthStr, DateTimeFormatter.ISO_LOCAL_DATE);
 
-            // Create customer
             Customer customer = new Customer();
             customer.setFirstName(firstName);
             customer.setLastName(lastName);
@@ -90,7 +86,6 @@ public class RegisterServlet extends HttpServlet {
 
             Customer savedCustomer = customerService.createCustomer(customer);
 
-            // Create user
             User user = new User();
             user.setUsername(username);
             user.setPassword(SecurityUtil.hashPassword(password));

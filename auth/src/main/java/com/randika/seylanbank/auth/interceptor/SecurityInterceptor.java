@@ -34,7 +34,6 @@ public class SecurityInterceptor {
             String[] allowedRoles = rolesAllowed.value();
             LOGGER.info("Required roles: " + Arrays.toString(allowedRoles));
 
-            // Check if user has any of the required roles
             boolean hasRole = false;
             if (httpRequest != null) {
                 for (String role : allowedRoles) {

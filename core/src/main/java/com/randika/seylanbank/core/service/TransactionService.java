@@ -24,14 +24,12 @@ public interface TransactionService {
 
     void reverseTransaction(Long transactionId) throws Exception;
 
-    // Customer-specific methods
     void customerTransferFunds(Long fromAccountId, Long toAccountId, BigDecimal amount, Long customerId)
             throws AccountNotFoundException, InsufficientFundsException, UnauthorizedAccessException;
 
     List<Transaction> getMyTransactionHistory(Long accountId, Date fromDate, Date toDate, Long customerId)
             throws AccountNotFoundException, UnauthorizedAccessException;
 
-    // Admin methods
     List<Transaction> getAllTransactions(Date fromDate, Date toDate);
     List<Transaction> getTransactionsByType(TransactionType type, Date fromDate, Date toDate);
     List<Transaction> getLargeTransactions(BigDecimal minimumAmount, Date fromDate, Date toDate);

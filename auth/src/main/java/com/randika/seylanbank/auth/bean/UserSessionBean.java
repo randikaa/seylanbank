@@ -29,10 +29,15 @@ public class UserSessionBean implements UserService {
     public User authenticateUser(String username, String password) throws UnauthorizedAccessException {
         try {
             TypedQuery<User> query = em.createQuery(
-                    "SELECT u FROM User u WHERE u.username = :username AND u.active = true", User.class);
-            query.setParameter("username", username);
+                    "SELECT u FROM User u WHERE LOWER(u.username) = LOWER(:username) AND u.active = true", User.class);
+            query.setParameter("username", username.toLowerCase());
 
             User user = query.getSingleResult();
+
+            System.out.println("Input Password (raw): " + password);
+            System.out.println("Stored Salt: " + user.getSalt());
+            System.out.println("Stored Password Hash: " + user.getPassword());
+            System.out.println("Computed Hash: " + SecurityUtil.hashPassword(password, user.getSalt()));
 
             if (SecurityUtil.verifyPassword(password, user.getPassword(), user.getSalt())) {
                 user.setLastLogin(LocalDateTime.now());
@@ -42,10 +47,9 @@ public class UserSessionBean implements UserService {
                 throw new UnauthorizedAccessException("Invalid credentials");
             }
         } catch (NoResultException e) {
-            throw new UnauthorizedAccessException("User not found or inactive");
+            throw new UnauthorizedAccessException("Invalid credentials");
         }
     }
-
 
     @Override
     @RolesAllowed({"ADMIN", "SUPER_ADMIN"})

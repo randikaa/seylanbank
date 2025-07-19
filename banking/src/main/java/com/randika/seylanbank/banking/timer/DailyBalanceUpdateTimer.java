@@ -14,12 +14,9 @@ import java.util.logging.Logger;
 @Singleton
 @Startup
 public class DailyBalanceUpdateTimer {
-
     private static final Logger LOGGER = Logger.getLogger(DailyBalanceUpdateTimer.class.getName());
-
     @EJB
     private InterestCalculationService interestCalculationService;
-
     @EJB
     private ScheduledOperationService scheduledOperationService;
 
@@ -29,18 +26,11 @@ public class DailyBalanceUpdateTimer {
         LOGGER.info("Starting daily balance update timer");
 
         try {
-            // Process pending transfers
             scheduledOperationService.processPendingTransfers();
-
-            // Calculate daily interest for applicable account types
             interestCalculationService.calculateInterestForAllAccounts();
-
-            // Log successful completion
             LOGGER.info("Daily balance update completed successfully");
-
         } catch (Exception e) {
             LOGGER.severe("Error during daily balance update: " + e.getMessage());
-            // In production, you might want to send alerts or notifications
         }
     }
 
@@ -61,7 +51,7 @@ public class DailyBalanceUpdateTimer {
     }
 
     private void performDataCleanup() {
-        // Implementation for data cleanup tasks
         LOGGER.info("Performing data cleanup tasks");
     }
 }
+

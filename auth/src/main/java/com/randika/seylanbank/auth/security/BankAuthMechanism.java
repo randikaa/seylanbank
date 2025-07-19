@@ -1,6 +1,12 @@
 package com.randika.seylanbank.auth.security;
 
+import com.randika.seylanbank.core.model.User;
+import com.randika.seylanbank.core.util.SecurityUtil;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.security.enterprise.authentication.mechanism.http.AutoApplySession;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
@@ -8,9 +14,12 @@ import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageCont
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import static com.randika.seylanbank.core.enums.UserRole.*;
 
 @AutoApplySession
 @ApplicationScoped
@@ -18,63 +27,84 @@ public class BankAuthMechanism implements HttpAuthenticationMechanism {
 
     private static final Logger LOGGER = Logger.getLogger(BankAuthMechanism.class.getName());
 
+    @PersistenceContext(unitName = "SeylanBankPU")
+    private EntityManager em;
+
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest request,
-                                                HttpServletResponse response, HttpMessageContext httpMessageContext) {
-
+                                                HttpServletResponse response,
+                                                HttpMessageContext httpMessageContext) {
         String requestURI = request.getRequestURI();
         LOGGER.info("Validating request for URI: " + requestURI);
 
-        // Check if resource is protected
         if (httpMessageContext.isProtected()) {
-            // Check for existing authentication
             if (httpMessageContext.getCallerPrincipal() != null) {
                 LOGGER.info("User already authenticated: " + httpMessageContext.getCallerPrincipal().getName());
                 return AuthenticationStatus.SUCCESS;
             }
 
-            // Check for form-based authentication
             String username = request.getParameter("username");
             String password = request.getParameter("password");
 
             if (username != null && password != null) {
                 LOGGER.info("Attempting form-based authentication for user: " + username);
 
-                // ===== Manual authentication logic =====
-                // Replace this with your actual authentication logic (e.g., DB check)
-                boolean validUser = "admin".equals(username) && "adminpass".equals(password);
-                if (validUser) {
-                    Set<String> roles = new HashSet<>();
-                    roles.add("USER");  // Assign roles accordingly
+                try {
+                    // Lookup user from DB
+                    TypedQuery<User> query = em.createQuery(
+                            "SELECT u FROM User u WHERE u.username = :username", User.class);
+                    query.setParameter("username", username);
+                    User user = query.getSingleResult();
 
-                    return httpMessageContext.notifyContainerAboutLogin(username, roles);
-                } else {
-                    try {
-                        String loginURL = request.getContextPath() + "/login.jsp?error=1";
-                        LOGGER.info("Authentication failed, redirecting to: " + loginURL);
-                        response.sendRedirect(loginURL);
-                        return AuthenticationStatus.SEND_FAILURE;
-                    } catch (Exception e) {
-                        LOGGER.severe("Error redirecting to login page after failed login: " + e.getMessage());
+                    if (SecurityUtil.verifyPassword(password, user.getPassword(), user.getSalt())) {
+                        Set<String> roles = new HashSet<>();
+                        roles.add(user.getRole().name());
+                        httpMessageContext.notifyContainerAboutLogin(username, roles);
+
+                        String redirectURL;
+                        switch (user.getRole()) {
+                            case ADMIN:
+                                redirectURL = "/admin/dashboard.jsp";
+                                break;
+                            case SUPER_ADMIN:
+                                redirectURL = "/admin/system-settings.jsp";
+                                break;
+                            case CUSTOMER:
+                                redirectURL = "/customer/dashboard.jsp";
+                                break;
+                            default:
+                                redirectURL = "/unauthorized.jsp";
+                                break;
+                        }
+
+                        response.sendRedirect(request.getContextPath() + redirectURL);
                         return AuthenticationStatus.SEND_FAILURE;
                     }
+                } catch (NoResultException e) {
+                    LOGGER.warning("Invalid username: " + username);
+                } catch (Exception e) {
+                    LOGGER.severe("Authentication error: " + e.getMessage());
                 }
-            }
 
-            // Redirect to login page if not authenticated
-            try {
-                String loginURL = request.getContextPath() + "/login.jsp";
-                LOGGER.info("Redirecting to login page: " + loginURL);
-                response.sendRedirect(loginURL);
-                return AuthenticationStatus.SEND_CONTINUE;
-            } catch (Exception e) {
-                LOGGER.severe("Error redirecting to login page: " + e.getMessage());
+                try {
+                    response.sendRedirect(request.getContextPath() + "/login.jsp?error=1");
+                } catch (IOException e) {
+                    LOGGER.severe("Failed to redirect after failed login: " + e.getMessage());
+                }
                 return AuthenticationStatus.SEND_FAILURE;
             }
+
+            try {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+            } catch (IOException e) {
+                LOGGER.severe("Error redirecting to login page: " + e.getMessage());
+            }
+            return AuthenticationStatus.SEND_CONTINUE;
         }
 
         return AuthenticationStatus.NOT_DONE;
     }
+
 
     @Override
     public AuthenticationStatus secureResponse(HttpServletRequest request,

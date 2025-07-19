@@ -15,8 +15,7 @@ public class EncryptionUtil {
     private static final Logger LOGGER = Logger.getLogger(EncryptionUtil.class.getName());
     private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
 
-    // In production, this should be loaded from a secure key management system
-    private static final String DEFAULT_KEY = "MySecretKey12345"; // 16 bytes for AES-128
+    private static final String DEFAULT_KEY = "MySecretKey12345";
 
     public static String encrypt(String data) {
         return encrypt(data, DEFAULT_KEY);
@@ -69,12 +68,10 @@ public class EncryptionUtil {
     }
 
     public static String encryptSensitiveData(String data) {
-        // For sensitive data like account numbers, SSNs, etc.
         return encrypt(data);
     }
 
     public static String decryptSensitiveData(String encryptedData) {
-        // For sensitive data like account numbers, SSNs, etc.
         return decrypt(encryptedData);
     }
 

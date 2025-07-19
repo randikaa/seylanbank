@@ -129,9 +129,6 @@ public class AccountController extends HttpServlet {
         Long accountId = Long.parseLong(request.getParameter("id"));
         Account account = accountService.findAccountById(accountId);
 
-        // Update account properties based on form data
-        // This is a simplified version - add validation and proper field updates
-
         accountService.updateAccount(account);
 
         LOGGER.info("Updated account: " + account.getAccountNumber());
@@ -191,10 +188,8 @@ public class AccountController extends HttpServlet {
         List<Account> accounts = null;
 
         if ("accountNumber".equals(searchType)) {
-            // Search by account number
             accounts = accountService.findByAccountNumber(searchTerm);
         } else if ("customerName".equals(searchType)) {
-            // Search by customer name
             accounts = accountService.findByCustomerName(searchTerm);
         } else if ("accountType".equals(searchType)) {
             AccountType type = AccountType.valueOf(searchTerm);

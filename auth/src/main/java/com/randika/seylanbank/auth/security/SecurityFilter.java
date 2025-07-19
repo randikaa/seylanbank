@@ -42,7 +42,6 @@ public class SecurityFilter implements Filter {
             return;
         }
 
-        // Check authentication for protected resources
         HttpSession session = httpRequest.getSession(false);
         if (session == null || httpRequest.getUserPrincipal() == null) {
             LOGGER.warning("Unauthenticated access attempt to: " + requestURI);
@@ -50,7 +49,6 @@ public class SecurityFilter implements Filter {
             return;
         }
 
-        // Role-based access control
         if (!hasRequiredRole(httpRequest, requestURI)) {
             LOGGER.warning("Unauthorized access attempt by user: " +
                     httpRequest.getUserPrincipal().getName() + " to: " + requestURI);
@@ -58,7 +56,6 @@ public class SecurityFilter implements Filter {
             return;
         }
 
-        // Add security headers
         addSecurityHeaders(httpResponse);
 
         chain.doFilter(request, response);

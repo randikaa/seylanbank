@@ -1,0 +1,14 @@
+<glassfish-web-app>
+    <security-role-mapping>
+        <role-name>SUPER_ADMIN</role-name>
+        <group-name>superadmin</group-name>
+    </security-role-mapping>
+    <security-role-mapping>
+        <role-name>ADMIN</role-name>
+        <group-name>admin</group-name>
+    </security-role-mapping>
+    <security-role-mapping>
+        <role-name>CUSTOMER</role-name>
+        <group-name>customer</group-name>
+    </security-role-mapping>
+</glassfish-web-app>
